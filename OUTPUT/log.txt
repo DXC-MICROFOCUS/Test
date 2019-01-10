@@ -1,0 +1,79 @@
+[SCRIPT_STARTED]
+---------------
+SOURCE DETAILS
+=================
+SOURCE_db : air
+SOURCE_pswd : VerticaFast1
+SOURCE_loadbalancer : swair-vrt-dev-llb2.itcs.softwaregrp.net
+SOURCE_env : DEV
+SOURCE_usermode : srvc_hpsw_dev_all
+
+DESTINATION DETAILS
+=================
+DESTINATION_db : AIR_DEV2
+DESTINATION_pswd : Her3tage$hpe
+DESTINATION_loadbalancer : swair-vrt-dev2-llb.itcs.softwaregrp.net
+DESTINATION_env : DEV2
+DESTINATION_usermode : srvc_hpsw_dev2_all
+
+List of databases
+ name | user_name 
+------+-----------
+ air  | dbadmin
+(1 row)
+
+
+|-->SOURCE CONNECTION - SUCCESS [ DB : air/USER_MODE : srvc_hpsw_dev_all ]
+
+  List of databases
+   name   | user_name 
+----------+-----------
+ AIR_DEV2 | dbadmin
+(1 row)
+
+
+|-->DESTINATION CONNECTION - SUCCESS[ DB : AIR_DEV2/USER_MODE : srvc_hpsw_dev2_all ]
+
+ SOURCE TABLE EXISTANCE INFO:
+==========================
+TABLE swt_rpt_stg.SOURCE_OBJECT_STRING FOUND IN DEV Environment (DB : air) TABLE DATA COUNT -    430
+select count(*) from swt_rpt_stg.SOURCE_OBJECT_STRING;
+   430
+
+
+|************************|
+|CLONING PROCESS INITIATED|
+|************************|
+ DESTINATION TABLE EXISTANCE INFO:
+==========================
+TABLE swt_rpt_stg.SOURCE_OBJECT_STRING NOT FOUND IN DEV2 Environment (DB : AIR_DEV2)
+=>=>=>=>  CLONING APPROVED  <=<=<=<=
+
+/opt/vertica/bin/vsql -E -e -a --echo-all -l -h swair-vrt-dev-llb2.itcs.softwaregrp.net -p 5433 -d air -U srvc_hpsw_dev_all -w VerticaFast1 -t -c "select export_objects('','swt_rpt_stg.SOURCE_OBJECT_STRING');"
+SOURCE AND DESTINATION SCHEMA IS SAME 
+|->STEP-1 : TABLE CREATION IN PROGRESS...
+|[SUCCESS]-->TABLE CREATED SUCCESSFULLY
+|->STEP-2 : COPY STATEMENT IN PROGRESS...
+GETTING DESTINATION COLUMNS
+/opt/vertica/bin/vsql -E -e -a --echo-all -l -h swair-vrt-dev2-llb.itcs.softwaregrp.net -p 5433 -d AIR_DEV2 -U srvc_hpsw_dev2_all -w Her3tage$hpe -t -c "SELECT COLUMN_NAME FROM COLUMNS WHERE TABLE_NAME='SOURCE_OBJECT_STRING' AND TABLE_SCHEMA='swt_rpt_stg';"
+GETTING SOURCE COLUMNS
+/opt/vertica/bin/vsql -E -e -a --echo-all -l -h swair-vrt-dev-llb2.itcs.softwaregrp.net -p 5433 -d air -U srvc_hpsw_dev_all -w VerticaFast1 -t -c "SELECT COLUMN_NAME FROM COLUMNS WHERE TABLE_NAME='SOURCE_OBJECT_STRING' AND TABLE_SCHEMA='swt_rpt_stg';"
+STEP-1[SUCCESS] BOTH SOURCE AND DESTINATION TABLES HAVING SAME NUMBER OF COLUMNS (count : 2)
+STEP-2[SUCCESS] COULMN NAME VERIFICATION DONE SUCCESSFULLY
+CONNECT TO VERTICA  air USER srvc_hpsw_dev_all PASSWORD 'VerticaFast1' ON 'swair-vrt-dev-llb2.itcs.softwaregrp.net',5433;copy swt_rpt_stg.SOURCE_OBJECT_STRING(OBJECT_NAME,OBJECT_STRING) from vertica air.swt_rpt_stg.SOURCE_OBJECT_STRING(OBJECT_NAME,OBJECT_STRING) direct;
+CONNECT
+ Rows Loaded 
+-------------
+         430
+(1 row)
+
+[COPY - SUCCESS]TABLE NAME : SOURCE_OBJECT_STRING 
+select count(*) from swt_rpt_stg.SOURCE_OBJECT_STRING;
+   430
+
+COPY STATEMENT EXECUTED SUCCESSFULLY (DB : AIR_DEV2 TABLENAME : swt_rpt_stg.SOURCE_OBJECT_STRING)
+||==>[TABLE DATA COUNT AFTER COPY -    430]
+USER : srvc_hpsw_dev2_read[READ ONLY] : srvc_hpsw_dev2_read => GRANT PERMISSION SUCCESS
+USER : srvc_hpsw_dev2_all[ALL PERMISSION] : srvc_hpsw_dev2_all => GRANT PERMISSION SUCCESS
+USER : srvc_hpswomt_dev2[ALL PERMISSION] : srvc_hpswomt_dev2 => GRANT PERMISSION SUCCESS
+|->STEP-2 : COPY STATEMENT IN PROGRESS...

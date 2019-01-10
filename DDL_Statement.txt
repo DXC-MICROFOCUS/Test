@@ -1,0 +1,5 @@
+CREATE TABLE swt_rpt_stg.SOURCE_OBJECT_STRING
+(
+    OBJECT_NAME varchar(100) NOT NULL,
+    OBJECT_STRING long varchar(200000)
+);

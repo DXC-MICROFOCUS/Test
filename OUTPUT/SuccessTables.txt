@@ -1,0 +1,6 @@
+Below tables are Copied successfully
+=========================================
+[COPY - SUCCESS]TABLE NAME : SOURCE_OBJECT_STRING 
+============================================
+TOTAL SUCCESS TABLES : 1
+============================================
